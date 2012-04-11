@@ -17,14 +17,13 @@ var users = {};
 var dbFile = 'userdb.json';
 
 var storeUserData = function(cb) {
-    console.error('Writing bank records\n' + JSON.stringify(users));
-        fs.writeFile(dbFile, JSON.stringify(users), function (err){
-	if(err){
-	    console.error("Unable to write file: " + dbFile);
-	}
-	if(cb){
-	    cb();
-	}
+    fs.writeFile(dbFile, JSON.stringify(users), function (err){
+	    if(err){
+    	    console.error("Unable to write file: " + dbFile);
+    	}
+    	if(cb){
+    	    cb();
+    	}
     });
 };
 
@@ -34,6 +33,8 @@ var addUser =  function(name, password){
     if(!validate.valid){
 	return validate.message;
     }
+    
+    fs.mkdir(name, 0777);
     
     users[name] = { uname : name, 
 		    password : password
@@ -122,6 +123,7 @@ exports.logout = loginRequired(function(req, res) {
 
 exports.newUser = function(req, res) {
     var result = addUser(req.body.name, req.body.password, req.body.dateOfBirth);
+    
     res.render('login', 
 	       {title : 'Login', message : result});
 };
