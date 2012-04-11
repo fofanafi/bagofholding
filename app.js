@@ -30,11 +30,12 @@ app.configure('production', function(){
 });
 
 // Routes
-app.get('/', routes.index);
+app.get('/', routes.homepage);
 app.get('/login', routes.login);
 app.get('/logout', routes.logout);
 app.get('/create', routes.create);
 app.get('/home', routes.home);
+app.get('/index', routes.index);
  
 app.post('/authenticate', routes.authenticate);
 app.post('/new_user', routes.newUser);

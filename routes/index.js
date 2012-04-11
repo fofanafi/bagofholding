@@ -74,12 +74,12 @@ var validateNewUser = function(name, password){
 };
 
 exports.index = function(req, res){ 
-    res.redirect('/login');
+    res.render('index', { title: 'User Home'});
 };
    
 exports.login = function(req, res) {
     if(req.session && req.session.username){
-	res.redirect('/home');
+	res.redirect('/index');
     }
     else{ 
 	res.render('login',
@@ -93,7 +93,6 @@ exports.home = loginRequired(function(req, res) {
 				 message :'Welcome ' + req.session.username});
 				 
 });
-
 
 
 exports.authenticate = function(req, res) {
