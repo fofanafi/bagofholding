@@ -74,7 +74,7 @@ var validateNewUser = function(name, password){
 };
 
 exports.index = function(req, res){ 
-    res.render('index', { title: 'User Home'});
+    res.render('index', { title: 'User Home', scripts: ['/public/javascript/script.js']});
 };
    
 exports.login = function(req, res) {
