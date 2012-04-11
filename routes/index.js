@@ -88,11 +88,9 @@ exports.login = function(req, res) {
 };
 
 
-exports.home = loginRequired(function(req, res) {
-     res.render('home', { title: 'Transcations',
-				 message :'Welcome ' + req.session.username});
-				 
-});
+exports.homepage = function(req, res) {
+     res.render('home', { title: 'Welcome to Bag of Holding!'});
+};
 
 
 exports.authenticate = function(req, res) {

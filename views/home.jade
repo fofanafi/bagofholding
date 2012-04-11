@@ -1,3 +1,14 @@
-p #{message}
+h1 Login
 
-a(href='logout') Logout
+a(href='/create') Create account
+
+form(name='login', method='post', action='authenticate')       
+  |Username
+  br
+  input(type='text', name='username') 
+  br
+  |Password
+  br
+  input(type='password', name='password') 
+  br
+  input(type='submit')
