@@ -34,7 +34,8 @@ var addUser =  function(name, password){
 	return validate.message;
     }
     
-    fs.mkdir(name, 0777);
+    fs.mkdir("users", 0777);
+    fs.mkdir("users/" + name, 0777);
     
     users[name] = { uname : name, 
 		    password : password
