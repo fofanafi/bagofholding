@@ -38,14 +38,7 @@ exports.authenticate = function(req, res) {
 	result = 'Incorrect password.';
     }
 
-    res.render('login',
-	       { title : 'Login', message : result });
-};
-
-
-exports.create = function(req, res) {
-    res.render('create', 
-	       { title: 'Create Account'});
+    res.redirect('home');
 };
 
 
@@ -95,17 +88,6 @@ exports.loadUsers = function(cb){
 	    cb(users);
 	}
     });
-};
-
-
-exports.login = function(req, res) {
-    if(req.session && req.session.username){
-	res.redirect('/index');
-    }
-    else{ 
-	res.render('home',
-		   { title: 'Homepage'}); 
-    }
 };
 
 
