@@ -1,25 +1,27 @@
 html
   head
+    link(rel='stylesheet', href='/stylesheets/homepage.css')
     block scripts
       script(src='javascript/homepage.js')
 
   body
     h1 Welcome to Bag of Holding!
 
-    p(id="login")
-      a(href="javascript:login()") Log in
+    div(id="form-container")
+      p(id="login")
+        a(href="javascript:login()") Log in
 
-    p(id="create")
-      a(href="javascript:create()") Create an account
+      p(id="create")
+        a(href="javascript:create()") Create an account
 
 
-    form(id="form", method='post', action='authenticate')       
-      |Username
-      br
-      input(type='text', name='username') 
-      br
-      |Password
-      br
-      input(type='password', name='password') 
-      br
-      input(type='submit')
+      form(id="form", method='post', action='authenticate')       
+        |Username
+        br
+        input(type='text', name='username') 
+        br
+        |Password
+        br
+        input(type='password', name='password') 
+        br
+        input(type='submit')
