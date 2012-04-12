@@ -34,7 +34,6 @@ app.get('/', routes.homepage);
 app.get('/login', routes.login);
 app.get('/logout', routes.logout);
 app.get('/create', routes.create);
-app.get('/home', routes.home);
 app.get('/index', routes.index);
  
 app.post('/authenticate', routes.authenticate);

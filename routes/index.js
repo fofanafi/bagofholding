@@ -74,7 +74,17 @@ var validateNewUser = function(name, password){
 };
 
 exports.index = function(req, res){ 
-    res.render('index', { title: 'User Home', scripts: ['/public/javascript/script.js']});
+    res.render('index', { title: 'User Home'});
+
+var fs = require('fs');
+
+
+fs.readdir('users/v', function (err, files) {
+if (err) console.error(err);
+console.log(files);
+});
+
+
 };
    
 exports.login = function(req, res) {
@@ -101,7 +111,7 @@ exports.authenticate = function(req, res) {
     }
     else if(users[req.body.username].password === req.body.password){
 	req.session.username = req.body.username;
-	res.redirect('/home');
+	res.redirect('/index');
 	return;
     }
     else {
