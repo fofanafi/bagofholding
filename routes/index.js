@@ -92,14 +92,14 @@ exports.login = function(req, res) {
 	res.redirect('/index');
     }
     else{ 
-	res.render('login',
-		   { title: 'Login', message:''}); 
+	res.render('home',
+		   { title: 'Homepage'}); 
     }
 };
 
 
 exports.homepage = function(req, res) {
-     res.render('home', { title: 'Welcome to Bag of Holding!'});
+     res.render('home', { title: 'Homepage'});
 };
 
 
