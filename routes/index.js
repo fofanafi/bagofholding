@@ -50,11 +50,16 @@ exports.create = function(req, res) {
 
 
 exports.homepage = function(req, res) {
-     res.render('home', { title: 'Homepage'});
+    if(req.session && req.session.username) {
+	    res.redirect('/index');
+	}
+    else {
+        res.render('home', { title: 'Homepage'});
+    }
 };
 
 
-exports.index = function(req, res){ 
+exports.index = loginRequired(function(req, res){ 
     res.render('index', { title: 'User Home'});
 
 var fs = require('fs');
@@ -66,7 +71,7 @@ console.log(files);
 });
 
 
-};
+});
 
 
 exports.loadUsers = function(cb){
@@ -107,7 +112,7 @@ exports.login = function(req, res) {
 function loginRequired(routeFunction){
     return function(req, res){
 	if(!req.session.username){
-	    res.redirect('/login');
+	    res.redirect('home');
 	    return;
 	}  else{
 	    routeFunction(req, res);
@@ -120,15 +125,14 @@ exports.logout = loginRequired(function(req, res) {
     if(req.session.username){
 	req.session.destroy();
     }
-    res.redirect('/login');
+    res.redirect('home');
 });
 
 
 exports.newUser = function(req, res) {
-    var result = addUser(req.body.name, req.body.password, req.body.dateOfBirth);
+    var result = addUser(req.body.username, req.body.password);
     
-    res.render('login', 
-	       {title : 'Login', message : result});
+    res.redirect('home');
 };
 
 

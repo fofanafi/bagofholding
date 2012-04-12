@@ -1,15 +1,25 @@
-h1 Welcome to Bag of Holding!
+html
+  head
+    block scripts
+      script(src='javascript/homepage.js')
 
-p Log in or 
-  a(href='/create') create an account
+  body
+    h1 Welcome to Bag of Holding!
 
-form(name='login', method='post', action='authenticate')       
-  |Username
-  br
-  input(type='text', name='username') 
-  br
-  |Password
-  br
-  input(type='password', name='password') 
-  br
-  input(type='submit')
+    p(id="login")
+      a(href="javascript:login()") Log in
+
+    p(id="create")
+      a(href="javascript:create()") Create an account
+
+
+    form(id="form", method='post', action='authenticate')       
+      |Username
+      br
+      input(type='text', name='username') 
+      br
+      |Password
+      br
+      input(type='password', name='password') 
+      br
+      input(type='submit')
