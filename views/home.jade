@@ -7,14 +7,14 @@ html
   body
     h1 Bag of Holding
 
+    div(id="tabs")
+      div(id="login")
+        a(href="javascript:login()") Sign In
+
+      div(id="create")
+        a(href="javascript:create()") Create New Account
+
     div(id="form-container")
-      p(id="login")
-        a(href="javascript:login()") Log in
-
-      p(id="create")
-        a(href="javascript:create()") Create an account
-
-
       form(id="form", method='post', action='authenticate')       
         |Username
         br
