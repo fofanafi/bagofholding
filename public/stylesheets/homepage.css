@@ -1,27 +1,39 @@
+div {
+  background: #fff;
+}
 div#form-container {
   box-shadow: 3px 3px 30px #aaa;
   border-radius: 0 0 20px 20px;
   margin-left: auto;
   margin-right: auto;
-  width: 250px;
+  width: 300px;
 }
 div#create {
+  border-top-right-radius: 20px;
   box-shadow: inset 2px -2px 5px #aaa;
   display: inline-block;
-  width: 150px;
+  height: 100%;
+  width: 185px;
 }
 div#login {
+  border-top-left-radius: 20px;
   display: inline-block;
-  width: 100px;
+  height: 100%;
+  width: 115px;
 }
 div#tabs {
   box-shadow: 3px 3px 30px #aaa;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
+  height: 25px;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
-  width: 250px;
+  width: 300px;
+}
+div#tabs a {
+  line-height: 22px;
+  vertical-align: middle;
 }
 form {
   padding: 10px 10px 10px 20px;
