@@ -16,12 +16,7 @@ html
 
     div(id="form-container")
       form(id="form", method='post', action='authenticate')       
-        |Username
+        input(id="username", type='text', name='username', value="Username", onclick="javascript:removeUsername()")
+        input(id="password", type='password', name='password', value="password", onclick="javascript:removePassword()") 
         br
-        input(type='text', name='username') 
-        br
-        |Password
-        br
-        input(type='password', name='password') 
-        br
-        input(type='submit')
+        input(id="submitForm", type='submit', value="Open my bag of holding")
