@@ -3,6 +3,7 @@ var fs = require("fs");
 //Dictionary mapping usernames to account information 
 var users = {};
 var dbFile = 'userdb.json';
+var uid = '';
 
 function addUser(name, password){
     var validate = validateNewUser(name, password);
@@ -31,6 +32,7 @@ exports.authenticate = function(req, res) {
     }
     else if(users[req.body.username].password === req.body.password){
 	req.session.username = req.body.username;
+    uid = req.body.username;
 	res.redirect('/index');
 	return;
     }
@@ -52,19 +54,22 @@ exports.homepage = function(req, res) {
 };
 
 
-exports.index = loginRequired(function(req, res){ 
-    res.render('index', { title: 'User Home'});
+exports.index = function(req, res){ 
 
-var fs = require('fs');
+    var myfiles = '<p>';
+    var filenames = fs.readdirSync('users/' + uid); 
+        for (i = 0; i < filenames.length; i++) {
+            myfiles += filenames[i] + '<br />';
+        } 
+    myfiles += '</p>'
+    res.render('index', { 
+        title: 'Bag of Holding',
+        user: uid,
+        flist: myfiles });
 
 
-fs.readdir('users/v', function (err, files) {
-if (err) console.error(err);
-console.log(files);
-});
-
-
-});
+};
+   
 
 
 exports.loadUsers = function(cb){
