@@ -33,6 +33,7 @@ app.configure('production', function(){
 app.get('/', routes.homepage);
 app.get('/logout', routes.logout);
 app.get('/index', routes.index);
+app.post('/upload', routes.upload);
  
 app.post('/authenticate', routes.authenticate);
 app.post('/new_user', routes.newUser);

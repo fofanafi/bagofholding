@@ -1,6 +1,11 @@
 h1= title
 p Welcome, #{user}!
-script{:type => "text/javascript",
-        :src  => "javascripts/script.js"}
-p Files: !{flist}
-  a(href='/logout') Logout
+block scripts
+  script(src="http://code.jquery.com/jquery-1.6.3.min.js")
+  script(src="javascript/jquery.filedrop.js")
+  script(src="javascript/script.js")
+
+div(id="dropbox")
+  p Files: !{flist}
+
+a(href='/logout') Logout
