@@ -22,8 +22,7 @@ function addUser(name, password) {
   fs.mkdir("users", 0777);
   fs.mkdir("users/" + name, 0777);
 
-  users[name] = { uname : name, 
-                  password : password };
+  users[name] = { password : password };
 
   if (rails_env == "development") {
     storeUserData_JSON();
@@ -122,8 +121,10 @@ exports.loadDB_postgres = function() {
     });
   });
 
-  var query = client.query("SELECT name, password FROM users");
-  
+  var query = client.query("SELECT uid, name, password FROM users");
+  query.on('row', function(row) {
+    users[row.name] = { password : row.password}
+  });
 }
 
 
