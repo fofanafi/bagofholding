@@ -121,7 +121,7 @@ exports.loadDB_postgres = function() {
     });
   });
 
-  var query = client.query("SELECT uid, name, password FROM users");
+  var query = client.query("SELECT name, password FROM users");
   query.on('row', function(row) {
     users[row.name] = { password : row.password}
   });
@@ -174,7 +174,9 @@ function storeUserData_JSON(cb) {
 
 
 function storeUserData_postgres(cb) {
-  
+  for(x in users) {
+    client.query("INSERT INTO users VALUES (default, $1, $2)", [x, users[x].password]);
+  }
 };
 
 
