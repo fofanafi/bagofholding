@@ -1,9 +1,16 @@
 var fs = require("fs");
+var pg = require('pg').native; 
+var program = require('commander');
+var client; 
 
-//Dictionary mapping usernames to account information 
+var rails_env; // Will be set to "development" or "production" on start
+
+
+// Dictionary mapping usernames to account information 
 var users = {};
 var dbFile = 'userdb.json';
 var uid = '';
+
 
 function addUser(name, password) {
   var validate = validateNewUser(name, password);
@@ -18,7 +25,12 @@ function addUser(name, password) {
   users[name] = { uname : name, 
                   password : password };
 
-  storeUserData();
+  if (rails_env == "development") {
+    storeUserData_JSON();
+  }
+  else {
+    storeUserData_postgres();
+  }
   return "Created user " + name + ".";
 };
 
@@ -66,8 +78,8 @@ exports.index = loginRequired(function(req, res){
 			      });
 
 
-
-exports.loadUsers = function(cb) {
+// This is the JSON version of the DB, used for development
+exports.loadDB_JSON = function(cb) {
   fs.readFile(dbFile, function(err, data) {
     if (err) {
       console.error("Unable to load file: " + dbFile);
@@ -81,7 +93,7 @@ exports.loadUsers = function(cb) {
       } 
     }
     if(!users) {
-      console.error("Data in " + dbFile + " is invalid. Reinitializing bank records.");
+      console.error("Data in " + dbFile + " is invalid. Reinitializing user records.");
       users = {};
     }
 
@@ -90,6 +102,26 @@ exports.loadUsers = function(cb) {
     }
   });
 };
+
+
+// This is the postgres version of the DB, used for production
+exports.loadDB_postgres = function() {
+  program.prompt('User: ', function (user) {
+    program.password('Password: ', '*', function (pass) {
+      var db = user;
+        if (pass) {
+          user = user + ":" + pass;
+        }
+
+        var conString = "tcp://" + user + "@db-edlab.cs.umass.edu:7391/" + db;
+        client = new pg.Client(conString);
+        client.connect();
+    });
+  });
+
+  var query = client.query("SELECT name, password FROM users");
+  
+}
 
 
 function loginRequired(routeFunction) {
@@ -120,7 +152,12 @@ exports.newUser = function(req, res) {
 };
 
 
-function storeUserData(cb) {
+exports.setEnv = function(env) {
+  rails_env = env;
+};
+
+
+function storeUserData_JSON(cb) {
   fs.writeFile(dbFile, JSON.stringify(users), function(err) {
     if(err) {
       console.error("Unable to write file: " + dbFile);
@@ -129,6 +166,11 @@ function storeUserData(cb) {
       cb();
     }
   });
+};
+
+
+function storeUserData_postgres(cb) {
+  
 };
 
 

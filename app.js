@@ -23,10 +23,14 @@ app.configure(function(){
 
 app.configure('development', function(){
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+  routes.setEnv("development");
+  routes.loadDB_JSON();
 });
 
 app.configure('production', function(){
   app.use(express.errorHandler());
+  routes.setEnv("production");
+  routes.loadDB_postgres();
 });
 
 // Routes
@@ -37,8 +41,6 @@ app.post('/upload', routes.upload);
  
 app.post('/authenticate', routes.authenticate);
 app.post('/new_user', routes.newUser);
-
-routes.loadUsers();
 
 app.listen(3000, function(){
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
