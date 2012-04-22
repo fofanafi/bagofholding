@@ -53,18 +53,18 @@ exports.homepage = function(req, res) {
 };
 
 
-exports.index = function(req, res){ 
-  var myfiles = '<p>';
-  var filenames = fs.readdirSync('users/' + uid); 
-  for (i = 0; i < filenames.length; i++) {
-    myfiles += filenames[i] + '<br />';
-  }
-  myfiles += '</p>'
-  res.render('index', { title: 'Bag of Holding',
-                        user: uid,
-                        flist: myfiles });
-};
-   
+exports.index = loginRequired(function(req, res){ 
+				  var myfiles = '<p>';
+				  var filenames = fs.readdirSync('users/' + uid); 
+				  for (i = 0; i < filenames.length; i++) {
+				      myfiles += filenames[i] + '<br />';
+				  }
+				  myfiles += '</p>';
+				  res.render('index', { title: 'Bag of Holding',
+							user: uid,
+							flist: myfiles });
+			      });
+
 
 
 exports.loadUsers = function(cb) {
@@ -95,7 +95,7 @@ exports.loadUsers = function(cb) {
 function loginRequired(routeFunction) {
   return function(req, res){
     if(!req.session.username) {
-      res.redirect('home');
+      res.redirect('/');
       return;
     } 
     else {
