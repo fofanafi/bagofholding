@@ -1,22 +1,20 @@
-html
-  head
-    link(rel='stylesheet', href='/stylesheets/homepage.css')
-    block scripts
-      script(src='javascript/homepage.js')
+link(rel='stylesheet', href='/stylesheets/homepage.css')
+block scripts
+  script(src='javascript/homepage.js')
 
-  body
-    h1 Bag of Holding
+body
+  h1 Bag of Holding
 
-    div(id="tabs")
-      div(id="login")
-        a(href="javascript:login()") Sign In
+  div(id="tabs")
+    div(id="login")
+      a(href="javascript:login()") Sign In
 
-      div(id="create")
-        a(href="javascript:create()") Create New Account
+    div(id="create")
+      a(href="javascript:create()") Create New Account
 
-    div(id="form-container")
-      form(id="form", method='post', action='authenticate')       
-        input(id="username", type='text', name='username', value="Username", onclick="javascript:removeUsername()")
-        input(id="password", type='password', name='password', value="password", onclick="javascript:removePassword()") 
-        br
-        input(id="submitForm", type='submit', value="Open my bag of holding")
+  div(id="form-container")
+    form(id="form", method='post', action='authenticate')       
+      input(id="username", type='text', name='username', value="Username", onclick="javascript:removeUsername()")
+      input(id="password", type='password', name='password', value="password", onclick="javascript:removePassword()") 
+      br
+      input(id="submitForm", type='submit', value="Open my bag of holding")

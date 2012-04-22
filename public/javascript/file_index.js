@@ -1,8 +1,8 @@
 $(function() {
 
-  var dropbox = $('#dropbox');
+  var file_container = $('#file_container');
 
-  dropbox.filedrop({
+  file_container.filedrop({
     url: 'upload',
     paramname: 'file',
     maxfiles: 10, // Number of files a user can upload concurrently
