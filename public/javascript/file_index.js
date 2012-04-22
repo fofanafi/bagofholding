@@ -1,8 +1,8 @@
 $(function() {
 
-  var file_container = $('#file_container');
+  var file_browser = $('#file_browser');
 
-  file_container.filedrop({
+  file_browser.filedrop({
     url: 'upload',
     paramname: 'file',
     maxfiles: 10, // Number of files a user can upload concurrently

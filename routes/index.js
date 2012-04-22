@@ -94,7 +94,7 @@ exports.loadUsers = function(cb) {
 
 function loginRequired(routeFunction) {
   return function(req, res){
-    if(!req.session.username) {
+    if(!req.session || !req.session.username) {
       res.redirect('/');
       return;
     } 
@@ -133,7 +133,7 @@ function storeUserData(cb) {
 
 
 // Uploads a file
-exports.upload = function(req, res) {
+exports.upload = loginRequired(function(req, res) {
   var file = req.files.file;
   console.log("Got file " + file.name);
 
@@ -149,7 +149,7 @@ exports.upload = function(req, res) {
   });
 
   res.send({}); // Send an empty response so the connection can be closed
-};
+});
 
 
 function validateNewUser(name, password) {
