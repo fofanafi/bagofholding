@@ -66,16 +66,19 @@ exports.homepage = function(req, res) {
 
 
 exports.index = loginRequired(function(req, res){ 
-				  var myfiles = '<p>';
-				  var filenames = fs.readdirSync('users/' + uid); 
-				  for (i = 0; i < filenames.length; i++) {
-				      myfiles += filenames[i] + '<br />';
-				  }
-				  myfiles += '</p>';
-				  res.render('index', { title: 'Bag of Holding',
-							user: uid,
-							flist: myfiles });
-			      });
+  
+   var myfiles = '<div class="fileTypeContainer"><p>';
+    var filenames = fs.readdirSync('users/' + uid); 
+        for (i = 0; i < filenames.length; i++) {
+            myfiles += '<a href="#"><img src="images/folder.png"><br />' + filenames[i] + '</a>';
+        } 
+    myfiles += '</p></div>'
+    res.render('index', { 
+        title: 'Bag of Holding',
+        user: uid,
+        flist: myfiles });
+			      
+});
 
 
 // This is the JSON version of the DB, used for development
