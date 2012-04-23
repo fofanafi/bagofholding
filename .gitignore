@@ -1,3 +1,4 @@
 .DS_Store
 userdb.json
 users/*
+node_modules/*
