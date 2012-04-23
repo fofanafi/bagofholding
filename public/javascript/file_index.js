@@ -23,7 +23,25 @@ $(function() {
           default:
               break;
       }
-    },
-    
+    }
+
+  }); // end file_browser.filedrop
+
+  $('.clickable').bind('click', function() {
+      clicked(this.id);
   });
 });
+
+function clicked(filename) {
+  var req = $.ajax({
+    type: 'POST',
+    url : '/click',
+    data: { 'path' : req.session.currentdir + filename }
+  });
+
+  req.done(function (data) {
+    if (data && data.msg) {
+      $('#file_browser_content').html(data.msg);
+    }
+  });
+};

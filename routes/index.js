@@ -85,6 +85,7 @@ exports.homepage = function(req, res) {
     res.redirect('/index');
   }
   else {
+    req.session.currentdir = "users/" + req.session.username + "/";
     res.render('home', { title: 'Homepage' });
   }
 };
