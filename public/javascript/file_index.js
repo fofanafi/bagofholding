@@ -1,6 +1,6 @@
 $(function() {
 
-  var file_browser = $('body');
+  var file_browser = $('#file_browser');
 
   file_browser.filedrop({
     url: 'upload',
@@ -27,14 +27,12 @@ $(function() {
 
   }); // end file_browser.filedrop
 
-  $('.clickable').bind('click', function() {
-      clicked(this.id);
-  });
 
   $('#file_browser').ready(function() {
     clicked("");
   });
 });
+
 
 function clicked(filename) {
   var req = $.ajax({
@@ -46,6 +44,9 @@ function clicked(filename) {
   req.done(function (data) {
     if (data && data.files) {
       $('#file_browser_content').html(data.files);
+      $('.clickable').bind('click', function() {
+        clicked(this.id);
+      });
     }
   });
 };

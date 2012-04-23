@@ -79,11 +79,27 @@ function bootstrapDB() {
 };
 
 
+// Decides what action to take when a user clicks a file/folder
 exports.click = loginRequired(function(req, res) {
-  console.log("in click");
-  var filesAsHTML = ls(req.session.currentdir + req.body.path)
-  res.send({ files: filesAsHTML });
+  // if (file is a folder)
+    var filesAsHTML = ls(req.session.currentdir + req.body.path)
+    res.send({ files: filesAsHTML });
+  // else
+  //   var file = downloadFile(req.session.currentdir + req.body.path);
+  //   res.sent({ files: file });
 });
+
+
+// Returns the classes of a file, such as clickable
+function getClasses(filepath) {
+  return 'class="clickable" ';
+};
+
+
+// Returns the image used to represent the given file
+function getImage(filepath) {
+  return '<img src="images/folder.png">';
+};
 
 
 // Renders the homepage. If a user is logged in, redirects them to /index
@@ -97,9 +113,9 @@ exports.homepage = function(req, res) {
 };
 
 
-exports.index = loginRequired(function(req, res){
+exports.index = loginRequired(function(req, res) {
   req.session.currentdir = "users/" + req.session.username + "/";
-  console.log("User in index, currentdir is: " + req.session.currentdir);
+
   res.render('index', { title: 'Bag of Holding',
                         username: req.session.username });
 });
@@ -177,9 +193,10 @@ function ls(path) {
   console.log("filenameslength: " + filenames.length);
 
   for (i = 0; i < filenames.length; i++) {
-    myfiles += '<a href="#"><img src="images/folder.png"><br />' + filenames[i] + '</a>';
+    myfiles += '<a id="' + filenames[i] + '" ' +
+               getClasses(path + filenames[i]) + 'href="#">' +
+               getImage(path + filenames[i]) + '<br />' + filenames[i] + '</a>';
   }
-  myfiles += '</p>';
 
   return myfiles;
 };
