@@ -102,6 +102,13 @@ function getImage(filepath) {
 };
 
 
+// Returns a file's mime type
+function getMimeType(filepath) {
+  var mimetype;
+  return mimetype;
+}
+
+
 // Renders the homepage. If a user is logged in, redirects them to /index
 exports.homepage = function(req, res) {
   if(req.session && req.session.username) {
