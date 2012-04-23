@@ -1,18 +1,15 @@
 block includes
   link(rel='stylesheet', href="stylesheets/file_index.css")
 block scripts
-  script(src="http://code.jquery.com/jquery-1.6.3.min.js")
+  script(src="javascript/jquery-1.6.3.min.js")
   script(src="javascript/jquery.filedrop.js")
   script(src="javascript/file_index.js")
-
-h1= title
-
-div(id="container")
-  p Welcome, #{user}!
-  div(id="file_browser")
+div(id="file_browser")
+  h1= title
+  p(class="upload_tip") Drag your files anywhere on this page to upload
+  p(id="welcome_user") Welcome, #{user}!
     div(id="file_browser_content")
       p !{flist}
-  p(class="upload_tip") Drag files into the container to upload them to your current folder
 
 
 a(id="logout", href='/logout') Logout

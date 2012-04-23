@@ -1,6 +1,6 @@
 $(function() {
 
-  var file_browser = $('#file_browser');
+  var file_browser = $('body');
 
   file_browser.filedrop({
     url: 'upload',
