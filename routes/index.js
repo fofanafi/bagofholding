@@ -79,118 +79,31 @@ function bootstrapDB() {
 };
 
 
+exports.click = loginRequired(function(req, res) {
+  console.log("in click");
+  var filesAsHTML = ls(req.session.currentdir + req.body.path)
+  res.send({ files: filesAsHTML });
+});
+
+
 // Renders the homepage. If a user is logged in, redirects them to /index
 exports.homepage = function(req, res) {
   if(req.session && req.session.username) {
     res.redirect('/index');
   }
   else {
-    req.session.currentdir = "users/" + req.session.username + "/";
     res.render('home', { title: 'Homepage' });
   }
 };
 
 
-exports.index = loginRequired(function(req, res){ 
-  var myfiles = '';
-  var filenames = fs.readdirSync('users/' + uid); 
-        //for every file in user's folder
-        for (i = 0; i < filenames.length; i++) {
-            
-            //check filetype and assign to correct div:
-
-            //images
-            if ((filenames[i].split('.').pop()) == ('png') ||
-                (filenames[i].split('.').pop()) == ('jpg') || 
-                (filenames[i].split('.').pop()) == ('gif') ||
-                (filenames[i].split('.').pop()) == ('bmp')) { 
-              if (bagOfImg) {
-                bagOfImg += '<a href="#"><img src="images/folder.png"><br />' + filenames[i] + '</a>';
-              }
-              else {
-                var bagOfImg = '<div id="bagOfImg" class="file_browser"><h2>Images</h2><a href="#"><img src="images/folder.png"><br />' + filenames[i] + '</a>';
-              }
-            }
-
-            //music
-            else if ((filenames[i].split('.').pop()) == ('mp3') ||
-                     (filenames[i].split('.').pop()) == ('flac')||
-                     (filenames[i].split('.').pop()) == ('ogg') ||
-                     (filenames[i].split('.').pop()) == ('au')  ||
-                     (filenames[i].split('.').pop()) == ('wav')) {
-              if (bagOfMu) {
-                bagOfMu += '<a href="#"><img src="images/folder.png"><br />' + filenames[i] + '</a>';
-              }
-              else {
-                var bagOfMu = '<div id="bagOfMu" class="file_browser"><h2>Music</h2><a href="#"><img src="images/folder.png"><br />' + filenames[i] + '</a>';  
-              }              
-            }
-
-            //movies
-            else if ((filenames[i].split('.').pop()) == ('mov') ||
-                     (filenames[i].split('.').pop()) == ('mpg') ||
-                     (filenames[i].split('.').pop()) == ('mp4') ||
-                     (filenames[i].split('.').pop()) == ('avi') ||
-                     (filenames[i].split('.').pop()) == ('wmv')) { 
-              if (bagOfMov) {
-                bagOfMov += '<a href="#"><img src="images/folder.png"><br />' + filenames[i] + '</a>';
-              }
-              else {
-                var bagOfMov = '<div id="bagOfMov" class="file_browser"><h2>Movies</h2><a href="#"><img src="images/folder.png"><br />' + filenames[i] + '</a>';
-              }              
-            }
-
-            //documents
-            else if ((filenames[i].split('.').pop()) == ('txt') ||
-                     (filenames[i].split('.').pop()) == ('doc') ||
-                     (filenames[i].split('.').pop()) == ('docx')||
-                     (filenames[i].split('.').pop()) == ('pdf') ||
-                     (filenames[i].split('.').pop()) == ('rtf')) {
-              if (bagOfDox) {
-                bagOfDox += '<a href="#"><img src="images/folder.png"><br />' + filenames[i] + '</a>';
-              }
-              else {
-                var bagOfDox = '<div id="bagOfDox" class="file_browser"><h2>Documents</h2><a href="#"><img src="images/folder.png"><br />' + filenames[i] + '</a>';                
-              }              
-            }
-
-            //other
-            else {
-              if (bagOfStuff) {
-                bagOfStuff += '<a href="#"><img src="images/folder.png"><br />' + filenames[i] + '</a>';
-              }
-              else{
-                var bagOfStuff = '<div id="bagOfStuff" class="file_browser"><h2>Other</h2><a href="#"><img src="images/folder.png"><br />' + filenames[i] + '</a>';
-              }
-             }
-            
-        } 
-
-            //add divs to myfiles
-            if (bagOfImg){myfiles += bagOfImg + '</div>'; console.log(bagOfImg);}
-            if (bagOfMu){myfiles += bagOfMu + '</div>';}
-            if (bagOfMov){myfiles += bagOfMov + '</div>';}
-            if (bagOfDox){myfiles += bagOfDox + '</div>'; console.log(bagOfDox);}
-            if (bagOfStuff){myfiles += bagOfStuff + '</div>';}
-
-    res.render('index', { 
-        title: 'Bag of Holding',
-        user: uid,
-        flist: ls('users/' + req.session.username)});
+exports.index = loginRequired(function(req, res){
+  req.session.currentdir = "users/" + req.session.username + "/";
+  console.log("User in index, currentdir is: " + req.session.currentdir);
+  res.render('index', { title: 'Bag of Holding',
+                        username: req.session.username });
 });
 
-exports.ls = loginRequired(function(req, res){
-  res.send(ls('users/' + req.session.username + '/' + req.body.path));
-});
-
-var ls = function(path){
-  var myfiles = '', filenames = fs.readdirSync(path); 
-    for (i = 0; i < filenames.length; i++) {
-      myfiles += '<a href="#"><img src="images/folder.png"><br />' + filenames[i] + '</a>';
-    } 
-  myfiles += '</p>';
-  return myfiles;
-};
 
 // This is the JSON version of the DB, used for development
 exports.loadDB_JSON = function() {
@@ -259,6 +172,19 @@ exports.logout = loginRequired(function(req, res) {
 });
 
 
+function ls(path) {
+  var myfiles = '', filenames = fs.readdirSync(path); 
+  console.log("filenameslength: " + filenames.length);
+
+  for (i = 0; i < filenames.length; i++) {
+    myfiles += '<a href="#"><img src="images/folder.png"><br />' + filenames[i] + '</a>';
+  }
+  myfiles += '</p>';
+
+  return myfiles;
+};
+
+
 exports.newUser = function(req, res) {
     var result = addUser(req.body.username, req.body.password);
 
@@ -308,6 +234,7 @@ exports.upload = loginRequired(function(req, res) {
 
   res.send({}); // Send an empty response so the connection can be closed
 });
+
 
 function validateNewUser(name, password) {
   var result = { valid : true,

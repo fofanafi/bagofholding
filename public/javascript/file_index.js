@@ -31,8 +31,8 @@ $(function() {
       clicked(this.id);
   });
 
-  $('#file_browser').load( function() {
-    clicked(req.session.currentdir);
+  $('#file_browser').ready(function() {
+    clicked("");
   });
 });
 
@@ -40,12 +40,12 @@ function clicked(filename) {
   var req = $.ajax({
     type: 'POST',
     url : '/click',
-    data: { 'path' : req.session.currentdir + filename }
+    data: { 'path' : filename }
   });
 
   req.done(function (data) {
-    if (data && data.msg) {
-      $('#file_browser_content').html(data.msg);
+    if (data && data.files) {
+      $('#file_browser_content').html(data.files);
     }
   });
 };
