@@ -54,6 +54,15 @@ exports.authenticate = function(req, res) {
 };
 
 
+// Configures the postgres DB
+// This method should only be run once, put it before the call to loadDB() in
+// your app.js, then immediately shutdown your server and remove it from app.js
+exports.bootstrapDB = function() {
+  client.query("CREATE SEQUENCE users_uid_seq");
+  client.query("CREATE TABLE users (uid int not null default nextval('users_mid_seq'), name varchar(20), password varchar(50), primary key (uid))");
+};
+
+
 exports.homepage = function(req, res) {
   if(req.session && req.session.username) {
     res.redirect('/index');
@@ -81,7 +90,7 @@ exports.index = loginRequired(function(req, res){
 
 
 // This is the JSON version of the DB, used for development
-exports.loadDB_JSON = function(cb) {
+exports.loadDB_JSON = function() {
   fs.readFile(dbFile, function(err, data) {
     if (err) {
       console.error("Unable to load file: " + dbFile);
@@ -97,10 +106,6 @@ exports.loadDB_JSON = function(cb) {
     if(!users) {
       console.error("Data in " + dbFile + " is invalid. Reinitializing user records.");
       users = {};
-    }
-
-    if(cb) {
-      cb(users);
     }
   });
 };
