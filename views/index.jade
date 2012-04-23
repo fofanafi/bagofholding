@@ -4,12 +4,14 @@ block scripts
   script(src="javascript/jquery-1.6.3.min.js")
   script(src="javascript/jquery.filedrop.js")
   script(src="javascript/file_index.js")
-div(id="file_browser")
-  h1= title
-  p(class="upload_tip") Drag your files anywhere on this page to upload
-  p(id="welcome_user") Welcome, #{user}!
-    div(id="file_browser_content")
-      p !{flist}
 
 
 a(id="logout", href='/logout') Logout
+p(id="welcome_user") Welcome, #{user}!
+
+h1= title
+div(id="container")
+  div(id="file_browser")
+    div(id="file_browser_content")
+      p !{flist}
+    p(class="upload_tip") Drag your files anywhere on this page to upload
