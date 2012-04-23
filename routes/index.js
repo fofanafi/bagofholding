@@ -74,20 +74,25 @@ exports.homepage = function(req, res) {
 
 
 exports.index = loginRequired(function(req, res){ 
-  
-   var myfiles = '<div class="fileTypeContainer"><p>';
-    var filenames = fs.readdirSync('users/' + uid); 
-        for (i = 0; i < filenames.length; i++) {
-            myfiles += '<a href="#"><img src="images/folder.png"><br />' + filenames[i] + '</a>';
-        } 
-    myfiles += '</p></div>'
     res.render('index', { 
         title: 'Bag of Holding',
         user: uid,
-        flist: myfiles });
-			      
+        flist: ls('users/' + req.session.username)});
 });
 
+exports.ls = loginRequired(function(req, res){
+  res.send(ls('users/' + req.session.username + '/' + req.body.path));
+});
+
+var ls = function(path){
+  var myfiles = '',
+  filenames = fs.readdirSync(path); 
+    for (i = 0; i < filenames.length; i++) {
+      myfiles += '<a href="#"><img src="images/folder.png"><br />' + filenames[i] + '</a>';
+    } 
+  myfiles += '</p>';
+  return myfiles;
+};
 
 // This is the JSON version of the DB, used for development
 exports.loadDB_JSON = function() {
@@ -128,7 +133,7 @@ exports.loadDB_postgres = function() {
 
   var query = client.query("SELECT name, password FROM users");
   query.on('row', function(row) {
-    users[row.name] = { password : row.password}
+    users[row.name] = { password : row.password};
   });
 }
 
@@ -203,7 +208,6 @@ exports.upload = loginRequired(function(req, res) {
 
   res.send({}); // Send an empty response so the connection can be closed
 });
-
 
 function validateNewUser(name, password) {
   var result = { valid : true,
