@@ -184,8 +184,7 @@ exports.ls = loginRequired(function(req, res){
 });
 
 var ls = function(path){
-  var myfiles = '',
-  filenames = fs.readdirSync(path); 
+  var myfiles = '', filenames = fs.readdirSync(path); 
     for (i = 0; i < filenames.length; i++) {
       myfiles += '<a href="#"><img src="images/folder.png"><br />' + filenames[i] + '</a>';
     } 
