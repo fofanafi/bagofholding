@@ -1,6 +1,6 @@
 $(function() {
 
-  var file_browser = $('#file_browser');
+  var file_browser = $('body');
 
   file_browser.filedrop({
     url: 'upload',
@@ -23,7 +23,29 @@ $(function() {
           default:
               break;
       }
-    },
-    
+    }
+
+  }); // end file_browser.filedrop
+
+  $('.clickable').bind('click', function() {
+      clicked(this.id);
+  });
+
+  $('#file_browser').load( function() {
+    clicked(req.session.currentdir);
   });
 });
+
+function clicked(filename) {
+  var req = $.ajax({
+    type: 'POST',
+    url : '/click',
+    data: { 'path' : req.session.currentdir + filename }
+  });
+
+  req.done(function (data) {
+    if (data && data.msg) {
+      $('#file_browser_content').html(data.msg);
+    }
+  });
+};

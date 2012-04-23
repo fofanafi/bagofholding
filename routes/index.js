@@ -55,25 +55,127 @@ exports.authenticate = function(req, res) {
 
 
 // Configures the postgres DB
-// This method should only be run once, put it before the call to loadDB() in
-// your app.js, then immediately shutdown your server and remove it from app.js
-exports.bootstrapDB = function() {
-  client.query("CREATE SEQUENCE users_uid_seq");
-  client.query("CREATE TABLE users (uid int not null default nextval('users_mid_seq'), name varchar(20), password varchar(50), primary key (uid))");
+// This method is not destructive and can be run without issue
+function bootstrapDB() {
+  // Create the sequence number for the uid field of users
+  client.query("CREATE SEQUENCE users_uid_seq", function(err, result) {
+    if (err == "Error: relation \"users_uid_seq\" already exists") {
+      console.log("This db is already bootstrapped 1/2");
+    }
+    else if (err) {
+      console.error("Recieved error in bootstrap: " + err);
+    }
+  });
+
+  // Create the 'users' database
+  client.query("CREATE TABLE users (uid int not null default nextval('users_uid_seq'), name varchar(20), password varchar(50), primary key (uid))", function(err, result) {
+    if (err == "Error: relation \"users\" already exists") {
+      console.log("This db is already bootstrapped 2/2");
+    }
+    else if (err) {
+      console.error("Recieved error in bootstrap: " + err);
+    }
+  });
 };
 
 
+// Renders the homepage. If a user is logged in, redirects them to /index
 exports.homepage = function(req, res) {
   if(req.session && req.session.username) {
     res.redirect('/index');
   }
   else {
+    req.session.currentdir = "users/" + req.session.username + "/";
     res.render('home', { title: 'Homepage' });
   }
 };
 
 
 exports.index = loginRequired(function(req, res){ 
+<<<<<<< HEAD
+=======
+  
+  var myfiles = '';
+  var filenames = fs.readdirSync('users/' + uid); 
+        //for every file in user's folder
+        for (i = 0; i < filenames.length; i++) {
+            
+            //check filetype and assign to correct div:
+
+            //images
+            if ((filenames[i].split('.').pop()) == ('png') ||
+                (filenames[i].split('.').pop()) == ('jpg') || 
+                (filenames[i].split('.').pop()) == ('gif') ||
+                (filenames[i].split('.').pop()) == ('bmp')) { 
+              if (bagOfImg) {
+                bagOfImg += '<a href="#"><img src="images/folder.png"><br />' + filenames[i] + '</a>';
+              }
+              else {
+                var bagOfImg = '<div id="bagOfImg" class="file_browser"><h2>Images</h2><a href="#"><img src="images/folder.png"><br />' + filenames[i] + '</a>';
+              }
+            }
+
+            //music
+            else if ((filenames[i].split('.').pop()) == ('mp3') ||
+                     (filenames[i].split('.').pop()) == ('flac')||
+                     (filenames[i].split('.').pop()) == ('ogg') ||
+                     (filenames[i].split('.').pop()) == ('au')  ||
+                     (filenames[i].split('.').pop()) == ('wav')) {
+              if (bagOfMu) {
+                bagOfMu += '<a href="#"><img src="images/folder.png"><br />' + filenames[i] + '</a>';
+              }
+              else {
+                var bagOfMu = '<div id="bagOfMu" class="file_browser"><h2>Music</h2><a href="#"><img src="images/folder.png"><br />' + filenames[i] + '</a>';  
+              }              
+            }
+
+            //movies
+            else if ((filenames[i].split('.').pop()) == ('mov') ||
+                     (filenames[i].split('.').pop()) == ('mpg') ||
+                     (filenames[i].split('.').pop()) == ('mp4') ||
+                     (filenames[i].split('.').pop()) == ('avi') ||
+                     (filenames[i].split('.').pop()) == ('wmv')) { 
+              if (bagOfMov) {
+                bagOfMov += '<a href="#"><img src="images/folder.png"><br />' + filenames[i] + '</a>';
+              }
+              else {
+                var bagOfMov = '<div id="bagOfMov" class="file_browser"><h2>Movies</h2><a href="#"><img src="images/folder.png"><br />' + filenames[i] + '</a>';
+              }              
+            }
+
+            //documents
+            else if ((filenames[i].split('.').pop()) == ('txt') ||
+                     (filenames[i].split('.').pop()) == ('doc') ||
+                     (filenames[i].split('.').pop()) == ('docx')||
+                     (filenames[i].split('.').pop()) == ('pdf') ||
+                     (filenames[i].split('.').pop()) == ('rtf')) {
+              if (bagOfDox) {
+                bagOfDox += '<a href="#"><img src="images/folder.png"><br />' + filenames[i] + '</a>';
+              }
+              else {
+                var bagOfDox = '<div id="bagOfDox" class="file_browser"><h2>Documents</h2><a href="#"><img src="images/folder.png"><br />' + filenames[i] + '</a>';                
+              }              
+            }
+
+            //other
+            else {
+              if (bagOfStuff) {
+                bagOfStuff += '<a href="#"><img src="images/folder.png"><br />' + filenames[i] + '</a>';
+              }
+              else{
+                var bagOfStuff = '<div id="bagOfStuff" class="file_browser"><h2>Other</h2><a href="#"><img src="images/folder.png"><br />' + filenames[i] + '</a>';
+              }
+             }
+            
+        } 
+
+            //add divs to myfiles
+            if (bagOfImg){myfiles += bagOfImg + '</div>'; console.log(bagOfImg);}
+            if (bagOfMu){myfiles += bagOfMu + '</div>';}
+            if (bagOfMov){myfiles += bagOfMov + '</div>';}
+            if (bagOfDox){myfiles += bagOfDox + '</div>'; console.log(bagOfDox);}
+            if (bagOfStuff){myfiles += bagOfStuff + '</div>';}
+
     res.render('index', { 
         title: 'Bag of Holding',
         user: uid,
@@ -121,19 +223,21 @@ exports.loadDB_postgres = function() {
   program.prompt('User: ', function (user) {
     program.password('Password: ', '*', function (pass) {
       var db = user;
-        if (pass) {
-          user = user + ":" + pass;
-        }
+      if (pass) {
+        user = user + ":" + pass;
+      }
 
-        var conString = "tcp://" + user + "@db-edlab.cs.umass.edu:7391/" + db;
-        client = new pg.Client(conString);
-        client.connect();
+      var conString = "tcp://" + user + "@db-edlab.cs.umass.edu:7391/" + db;
+      client = new pg.Client(conString);
+      client.connect();
+
+      bootstrapDB();
+
+     var query = client.query("SELECT name, password FROM users");
+      query.on('row', function(row) {
+        users[row.name] = { password : row.password}
+      });
     });
-  });
-
-  var query = client.query("SELECT name, password FROM users");
-  query.on('row', function(row) {
-    users[row.name] = { password : row.password};
   });
 }
 
