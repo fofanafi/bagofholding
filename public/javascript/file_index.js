@@ -30,6 +30,10 @@ $(function() {
   $('.clickable').bind('click', function() {
       clicked(this.id);
   });
+
+  $('#file_browser').load( function() {
+    clicked(req.session.currentdir);
+  });
 });
 
 function clicked(filename) {
