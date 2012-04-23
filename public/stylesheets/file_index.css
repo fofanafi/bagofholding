@@ -3,11 +3,8 @@ a#logout {
   right: 10px;
   top: 15px;
 }
-p#welcome_user {
-  position: absolute;
-  left: 10px;
-  top: 0px;
-}
+body,
+height 100%,
 div {
   background: #fff;
 }
@@ -34,6 +31,11 @@ div.file_browser a {
 }
 h1 {
   text-align: center;
+}
+p#welcome_user {
+  position: absolute;
+  left: 10px;
+  top: 0px;
 }
 p.upload_tip {
   text-align: center;

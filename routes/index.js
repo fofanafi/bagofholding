@@ -55,14 +55,31 @@ exports.authenticate = function(req, res) {
 
 
 // Configures the postgres DB
-// This method should only be run once, put it before the call to loadDB() in
-// your app.js, then immediately shutdown your server and remove it from app.js
-exports.bootstrapDB = function() {
-  client.query("CREATE SEQUENCE users_uid_seq");
-  client.query("CREATE TABLE users (uid int not null default nextval('users_mid_seq'), name varchar(20), password varchar(50), primary key (uid))");
+// This method is not destructive and can be run without issue
+function bootstrapDB() {
+  // Create the sequence number for the uid field of users
+  client.query("CREATE SEQUENCE users_uid_seq", function(err, result) {
+    if (err == "Error: relation \"users_uid_seq\" already exists") {
+      console.log("This db is already bootstrapped 1/2");
+    }
+    else if (err) {
+      console.error("Recieved error in bootstrap: " + err);
+    }
+  });
+
+  // Create the 'users' database
+  client.query("CREATE TABLE users (uid int not null default nextval('users_uid_seq'), name varchar(20), password varchar(50), primary key (uid))", function(err, result) {
+    if (err == "Error: relation \"users\" already exists") {
+      console.log("This db is already bootstrapped 2/2");
+    }
+    else if (err) {
+      console.error("Recieved error in bootstrap: " + err);
+    }
+  });
 };
 
 
+// Renders the homepage. If a user is logged in, redirects them to /index
 exports.homepage = function(req, res) {
   if(req.session && req.session.username) {
     res.redirect('/index');
@@ -191,19 +208,21 @@ exports.loadDB_postgres = function() {
   program.prompt('User: ', function (user) {
     program.password('Password: ', '*', function (pass) {
       var db = user;
-        if (pass) {
-          user = user + ":" + pass;
-        }
+      if (pass) {
+        user = user + ":" + pass;
+      }
 
-        var conString = "tcp://" + user + "@db-edlab.cs.umass.edu:7391/" + db;
-        client = new pg.Client(conString);
-        client.connect();
+      var conString = "tcp://" + user + "@db-edlab.cs.umass.edu:7391/" + db;
+      client = new pg.Client(conString);
+      client.connect();
+
+      bootstrapDB();
+
+      var query = client.query("SELECT name, password FROM users");
+      query.on('row', function(row) {
+        users[row.name] = { password : row.password}
+      });
     });
-  });
-
-  var query = client.query("SELECT name, password FROM users");
-  query.on('row', function(row) {
-    users[row.name] = { password : row.password}
   });
 }
 
