@@ -92,9 +92,6 @@ exports.homepage = function(req, res) {
 
 
 exports.index = loginRequired(function(req, res){ 
-<<<<<<< HEAD
-=======
-  
   var myfiles = '';
   var filenames = fs.readdirSync('users/' + uid); 
         //for every file in user's folder
