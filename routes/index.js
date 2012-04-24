@@ -91,8 +91,9 @@ exports.click = loginRequired(function(req, res) {
 
 
 // Streams a file to the user
-function downloadFile(req, res, filepath) {
-  
+function downloadFile(req, res, filename) {
+  //file to download = req.session.currentdir + filename
+  //todo: implement
 };
 
 

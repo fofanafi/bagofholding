@@ -26,8 +26,15 @@ div#file_browser_content {
 }
 div#file_browser_content a {
   display: inline-block;
+  margin-bottom: 10px;
   vertical-align: bottom;
-  margin: 0px 25px 0px 25px;
+  width: 20%;
+  text-align: center;
+}
+div#file_browser_content a.clickable img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 h1 {
   text-align: center;
@@ -39,4 +46,21 @@ p#welcome_user {
 }
 p.upload_tip {
   text-align: center;
+}
+@media screen and (max-width: 960px) {
+  div#file_browser_content a {
+    width: 25%;
+  }
+}
+@media screen and (max-width: 768px) {
+  div#file_browser_content a {
+    width: 33%;
+    font: 13px "Lucida Grande", Helvetica, Arial, sans-serif;
+  }
+}
+@media screen and (max-width: 580px) {
+  div#file_browser_content a {
+    width: 50%;
+    font: 12px "Lucida Grande", Helvetica, Arial, sans-serif;
+  }
 }
