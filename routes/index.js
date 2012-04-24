@@ -2,9 +2,6 @@ var fs = require("fs");
 var pg = require('pg').native; 
 var program = require('commander');
 var client; 
-var util = require('util');
-var exec  = require('child_process').exec;
-var child;
 var rails_env; // Will be set to "development" or "production" on start
 var shell = require('shelljs');
 
