@@ -5,6 +5,7 @@ a#logout {
 }
 body {
   height: 100%;
+  padding: 50px 0;
 }
 div {
   background: #fff;
@@ -12,7 +13,7 @@ div {
 div#container {
   margin-left: auto;
   margin-right: auto;
-  width: 80%;
+  width: 85%;
 }
 div#file_browser {
   box-shadow: 3px 3px 30px #aaa;
@@ -47,20 +48,32 @@ p#welcome_user {
 p.upload_tip {
   text-align: center;
 }
-@media screen and (max-width: 960px) {
+@media screen and (max-width: 700px) {
   div#file_browser_content a {
     width: 25%;
   }
-}
-@media screen and (max-width: 768px) {
-  div#file_browser_content a {
-    width: 33%;
-    font: 13px "Lucida Grande", Helvetica, Arial, sans-serif;
+  div#container {
+    width: 90%;
   }
 }
 @media screen and (max-width: 580px) {
   div#file_browser_content a {
-    width: 50%;
+    width: 33%;
+    font: 13px "Lucida Grande", Helvetica, Arial, sans-serif;
+  }
+  div#container {
+    width: 90%;
+  }
+}
+@media screen and (max-width: 400px) {
+  div#file_browser_content a {
+    width: 33%;
     font: 12px "Lucida Grande", Helvetica, Arial, sans-serif;
+  }
+  div#container {
+    width: 100%;
+  }
+  .upload_tip {
+    visibility: hidden;
   }
 }
