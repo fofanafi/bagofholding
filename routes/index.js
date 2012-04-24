@@ -6,12 +6,13 @@ var util = require('util');
 var exec  = require('child_process').exec;
 var child;
 var rails_env; // Will be set to "development" or "production" on start
-
+var shell = require('shelljs');
 
 // Dictionary mapping usernames to account information 
 var users = {};
 var dbFile = 'userdb.json';
 var uid = '';
+
 
 
 function addUser(name, password) {
@@ -107,6 +108,7 @@ function getClasses(filepath) {
 // Returns the image used to represent the given file
 function getImage(filepath) {
   var mime = getMimeType(filepath);
+  //console.log(mime);
   var imgpath = "";
 
   //audio
@@ -134,22 +136,35 @@ function getImage(filepath) {
   return '<img src=' + imgpath + '>';
 };
 
-
 // Returns a file's mime type
 function getMimeType(filepath) {
   var mimetype;
+  mimetype = (shell.exec("file --mime-type '" + filepath + "'", {silent:true}).output);
+  mimetype = mimetype.substring(mimetype.indexOf(": "), mimetype.length);
+  mimetype = mimetype.substring(2, mimetype.indexOf("/"));
+  return mimetype;
 
+    
+}
+
+/* Returns a file's mime type
+function getMimeType(filepath) {
+  asyncblock(function(flow) {
+  var mimetype;
   child = exec("file --mime-type '" + filepath + "'",
     function (error, stdout, stderr) {
       mimetype = stdout.substring(stdout.indexOf(": "), stdout.length);
+      mimetype = mimetype.substring(2, mimetype.indexOf("/"));
+      
       if (error !== null) {
         console.log('exec error: ' + error);
       }
-    });
 
-  return mimetype;
+    }), flow.set('contents1');
+  console.log('this is: ' + flow.get('contents1'));
+  });
 }
-
+*/
 
 // Renders the homepage. If a user is logged in, redirects them to /index
 exports.homepage = function(req, res) {
