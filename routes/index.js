@@ -107,7 +107,6 @@ function getClasses(filepath) {
 // Returns the image used to represent the given file
 function getImage(filepath) {
   var mime = getMimeType(filepath);
-  mime = mime.substring(0, mime.indexOf("/"));
   var imgpath = "";
 
   //audio
@@ -139,19 +138,15 @@ function getImage(filepath) {
 // Returns a file's mime type
 function getMimeType(filepath) {
   var mimetype;
-  
+
   child = exec("file --mime-type '" + filepath + "'",
     function (error, stdout, stderr) {
-      console.log('stdout: ' + stdout);
-      console.log('stderr: ' + stderr);
-      mimetype = stdout.toString();
+      mimetype = stdout.substring(stdout.indexOf(": "), stdout.length);
       if (error !== null) {
         console.log('exec error: ' + error);
       }
     });
-  console.log("mime is: " + mimetype);
-  mimetype = mimetype.substring(child.indexOf(": "), child.length());
-  console.log("Mimetype is: " + mimetype);
+
   return mimetype;
 }
 
