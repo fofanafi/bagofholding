@@ -2,7 +2,9 @@ var fs = require("fs");
 var pg = require('pg').native; 
 var program = require('commander');
 var client; 
-
+var util = require('util');
+var exec  = require('child_process').exec;
+var child;
 var rails_env; // Will be set to "development" or "production" on start
 
 
@@ -104,13 +106,52 @@ function getClasses(filepath) {
 
 // Returns the image used to represent the given file
 function getImage(filepath) {
-  return '<img src="images/folder.png">';
+  var mime = getMimeType(filepath);
+  mime = mime.substring(0, mime.indexOf("/"));
+  var imgpath = "";
+
+  //audio
+    if (mime === 'audio'){
+      imgpath = "images/audio_basic.png";
+    }
+  //image
+    else if (mime === 'image'){
+      imgpath = "images/image.png";
+    }
+  //text
+    else if (mime === 'text'){
+      imgpath = "images/text_plain.png";
+    }
+  //video
+    else if (mime === 'video'){
+      imgpath = "images/video_x_generic.png";
+    }
+  //application
+    else if (mime === 'application'){
+      imgpath = "images/application_octet_stream.png";
+    }
+  //other
+    else imgpath = "images/folder.png";
+  return '<img src=' + imgpath + '>';
 };
 
 
 // Returns a file's mime type
 function getMimeType(filepath) {
   var mimetype;
+  
+  child = exec("file --mime-type '" + filepath + "'",
+    function (error, stdout, stderr) {
+      console.log('stdout: ' + stdout);
+      console.log('stderr: ' + stderr);
+      mimetype = stdout.toString();
+      if (error !== null) {
+        console.log('exec error: ' + error);
+      }
+    });
+  console.log("mime is: " + mimetype);
+  mimetype = mimetype.substring(child.indexOf(": "), child.length());
+  console.log("Mimetype is: " + mimetype);
   return mimetype;
 }
 
