@@ -90,6 +90,12 @@ exports.click = loginRequired(function(req, res) {
 });
 
 
+// Streams a file to the user
+function downloadFile(req, res, filepath) {
+  
+};
+
+
 // Returns the classes of a file, such as clickable
 function getClasses(filepath) {
   return 'class="clickable" ';
