@@ -251,8 +251,7 @@ exports.logout = loginRequired(function(req, res) {
 
 
 function ls(path) {
-  var myfiles = '', filenames = fs.readdirSync(path); 
-  console.log("filenameslength: " + filenames.length);
+  var myfiles = '', filenames = fs.readdirSync(path);
 
   for (i = 0; i < filenames.length; i++) {
     myfiles += '<a id="' + filenames[i] + '" ' +

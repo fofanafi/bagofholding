@@ -48,7 +48,7 @@ p#welcome_user {
 p.upload_tip {
   text-align: center;
 }
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 720px) {
   div#file_browser_content a {
     width: 25%;
   }
