@@ -81,12 +81,14 @@ function bootstrapDB() {
 
 // Decides what action to take when a user clicks a file/folder
 exports.click = loginRequired(function(req, res) {
-  // if (file is a folder)
+  var mime = getMimeType(req.body.path);
+
+  // if (mime == folder)
     var filesAsHTML = ls(req.session.currentdir + req.body.path)
     res.send({ files: filesAsHTML });
   // else
   //   var file = downloadFile(req.session.currentdir + req.body.path);
-  //   res.sent({ files: file });
+  //   res.send({ files: file });
 });
 
 
@@ -103,7 +105,7 @@ function getClasses(filepath) {
 };
 
 
-// Returns the image used to represent the given file
+// Returns the image, as html, used to represent the given file
 function getImage(filepath) {
 
   var mime = getMimeType(filepath);
