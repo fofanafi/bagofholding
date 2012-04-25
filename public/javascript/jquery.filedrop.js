@@ -65,7 +65,7 @@ function clicked(filename) {
   var req = $.ajax({
     type: 'POST',
     url : '/click',
-    data: { 'path' : "" },
+    data: { 'path' : filename },
     success: function(data) {
       console.log("success");
       if (data && data.files) {
