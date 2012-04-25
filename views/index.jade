@@ -9,7 +9,8 @@ block scripts
 a(id="logout", href='/logout') Logout
 p(id="welcome_user") Welcome, #{ username }!
 
-h1= title
+a(href='/index')
+  h1= title
 div(id="container")
   div(id="file_browser")
     div(id="file_browser_content")

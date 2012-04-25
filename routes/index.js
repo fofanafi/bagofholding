@@ -246,6 +246,7 @@ function ls(path) {
 
   for (i = 0; i < filenames.length; i++) {
     myfiles += '<a id="' + filenames[i] + '" ' +
+               //getClasses(path + filenames[i]) + "href='javascript:history.pushState(null,null," + '"' + filenames[i] + '"' + ")'>" +
                getClasses(path + filenames[i]) + 'href="#">' +
                getImage(path + filenames[i]) + '<br />' + filenames[i] + '</a>';
   }

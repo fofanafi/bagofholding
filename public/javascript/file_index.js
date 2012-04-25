@@ -32,7 +32,10 @@ $(function() {
     clicked("");
   });
 });
-
+/*window.onpopstate = function(event) {  
+  alert("location: " + document.location + ", state: " + JSON.stringify(event.state));  
+};
+*/  
 function clicked(filename) {
   var req = $.ajax({
     type: 'POST',
