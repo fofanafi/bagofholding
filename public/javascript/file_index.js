@@ -33,14 +33,14 @@ $(function() {
 
 
   $('#file_browser').ready(function() {
-    clicked("");
+    clicked("", true);
   });
 });
 /*window.onpopstate = function(event) {  
   alert("location: " + document.location + ", state: " + JSON.stringify(event.state));  
 };
 */  
-function clicked(filename) {
+function clicked(filename, pushState) {
   var req = $.ajax({
     type: 'POST',
     url : '/click',
@@ -51,10 +51,14 @@ function clicked(filename) {
     if (data && data.files) {
       $('#file_browser_content').html(data.files);
       $('.clickable').bind('click', function() {
-        clicked(this.id);
+        clicked(this.id, true);
       });
-      if (filename != "") {
+      if (filename.length != 0) {
         setDir(data.currentdir + filename + "/");
+      }
+      if (pushState) {
+        var directory = data.currentdir + filename + "/";
+        history.pushState({dir: directory}, "Bag of Holding", "");
       }
     } 
     else if(data && data.url){         
@@ -76,4 +80,11 @@ function setDir(directory) {
   req.done(function (data) {
     //place holder
   });
+};
+
+window.onpopstate = function(e) {
+  if(e.state && e.state.dir) {
+    setDir(e.state.dir);
+    clicked("", false);
+  }
 };
