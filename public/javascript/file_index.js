@@ -48,23 +48,23 @@ function clicked(filename) {
    });
 
   req.done(function(data) {
-   if (data && data.files) {
-     $('#file_browser_content').html(data.files);
-     $('.clickable').bind('click', function() {
-            clicked(this.id);
-        });
+    if (data && data.files) {
+      $('#file_browser_content').html(data.files);
+      $('.clickable').bind('click', function() {
+        clicked(this.id);
+      });
       if (filename != "") {
         setDir(data.currentdir + filename + "/");
       }
-   } 
-   else if(data && data.url){         
-     var iframe = document.createElement("iframe");
-     console.error('wow');
-     iframe.src = data.url;
-     iframe.style.display = 'none';
-     document.body.appendChild(iframe);
-   }
-});
+    } 
+    else if(data && data.url){         
+      var iframe = document.createElement("iframe");
+      iframe.src = data.url;
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+    }
+  });
+};
 
 function setDir(directory) {
   var req = $.ajax({
