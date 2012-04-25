@@ -13,9 +13,11 @@ $(function() {
               alert('browser does not support html5 drag and drop');
               break;
           case 'TooManyFiles':
+              alert('Too many files');
               // user uploaded more than 'maxfiles'
               break;
           case 'FileTooLarge':
+              alert('File is too large');
               // program encountered a file whose size is greater than 'maxfilesize'
               // FileTooLarge also has access to the file which was too large
               // use file.name to reference the filename of the culprit file
