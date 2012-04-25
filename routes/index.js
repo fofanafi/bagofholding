@@ -140,7 +140,7 @@ else if (mime.substring(2) != "application/x-directory"){
       imgpath = "images/application_octet_stream.png";
     }
   //other
-    else imgpath = "images/folder.png";
+    else imgpath = "images/unknown.png";
   }
   return '<img src=' + imgpath + '>';
 };
