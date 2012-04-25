@@ -83,20 +83,20 @@ function bootstrapDB() {
 
 // Decides what action to take when a user clicks a file/folder
 exports.click = loginRequired(function(req, res) {
-
-fs.stat(req.session.currentdir + req.body.path, function(err, stats){ 
-    if(err){
-      console.error('Something when wrong when trying to read the file ' + path + '\n' + err);
+  fs.stat(req.session.currentdir + req.body.path, function(err, stats) { 
+    if(err) {
+      console.error('Error when trying to read the file ' + path + '\n' + err);
       res.send('');
-      }
-    else if(stats.isDirectory()){
+    }
+    else if(stats.isDirectory()) {
       var filesAsHTML = ls(path.join(req.session.currentdir, req.body.path));
-      res.send({ files: filesAsHTML });
-      }
-    else if(stats.isFile()){ 
-	res.send({ url : path.join('download',req.session.username, req.body.path)});
-      }
-    });
+      res.send({ files: filesAsHTML,
+                 currentdir: req.session.currentdir });
+    }
+    else if(stats.isFile()) { 
+      res.send({ url : path.join('download',req.session.username, req.body.path)});
+    }
+  });
 });
 
 /*
@@ -146,6 +146,11 @@ exports.downloadFile = loginRequired(function(req, res) {
 // Returns the classes of a file, such as clickable
 function getClasses(filepath) {
   return 'class="clickable" ';
+};
+
+
+exports.getCurrentDirectory = function(req, res) {
+  res.send({ path: req.session.currentdir });
 };
 
 
@@ -295,6 +300,11 @@ function ls(path) {
                getImage(path + filenames[i]) + '<br />' + filenames[i] + '</a>';
   }
 
+  console.log("myfiles.length is " + myfiles.length);
+  if (parseInt(myfiles.length) == 0) {
+    myfiles = '<img id="loading" src="images/BagOfHolding>"';
+  }
+
   return myfiles;
 };
 
@@ -304,6 +314,16 @@ exports.newUser = function(req, res) {
 
     res.redirect('home');
 };
+
+
+exports.setCurrentDirectory = function(req, res) {
+  var path = req.body.path;
+  console.log("current dir is: " + req.session.currentdir);
+  console.log("setting current dir to: " + path);
+  req.session.currentdir = path;
+
+  res.send({});
+}
 
 
 exports.setEnv = function(env) {

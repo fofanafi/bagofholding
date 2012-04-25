@@ -43,6 +43,8 @@ app.post('/upload', routes.upload);
 app.post('/click', routes.click);
 app.post('/authenticate', routes.authenticate);
 app.post('/new_user', routes.newUser);
+app.post('/setDir', routes.setCurrentDirectory);
+app.post('/getDir', routes.getCurrentDirectory);
 
 app.listen(3000, function(){
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);

@@ -1,3 +1,5 @@
+var currentdir
+
 $(function() {
 
   var file_browser = $('#file_browser');
@@ -46,19 +48,32 @@ function clicked(filename) {
    });
 
   req.done(function(data) {
-   console.log("successssssss");
    if (data && data.files) {
-       $('#file_browser_content').html(data.files);
-       $('.clickable').bind('click', function() {
-              clicked(this.id);
-          });
+     $('#file_browser_content').html(data.files);
+     $('.clickable').bind('click', function() {
+            clicked(this.id);
+        });
+      if (filename != "") {
+        setDir(data.currentdir + filename + "/");
+      }
    } 
    else if(data && data.url){         
-       var iframe = document.createElement("iframe");
-       console.error('wow');
-       iframe.src = data.url;
-       iframe.style.display = 'none';
-       document.body.appendChild(iframe);
+     var iframe = document.createElement("iframe");
+     console.error('wow');
+     iframe.src = data.url;
+     iframe.style.display = 'none';
+     document.body.appendChild(iframe);
    }
-     });
+});
+
+function setDir(directory) {
+  var req = $.ajax({
+    type: 'POST',
+    url : '/setdir',
+    data: { 'path' : directory }
+  });
+
+  req.done(function (data) {
+    //place holder
+  });
 };
