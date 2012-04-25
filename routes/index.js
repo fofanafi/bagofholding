@@ -301,8 +301,7 @@ exports.upload = loginRequired(function(req, res) {
 
     }
   }); 
-  var filesAsHTML = ls(req.session.currentdir)
-    res.send({ files: filesAsHTML });
+    res.send({ });
 });
 
 
