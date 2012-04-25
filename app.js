@@ -37,6 +37,8 @@ app.configure('production', function(){
 app.get('/', routes.homepage);
 app.get('/logout', routes.logout);
 app.get('/index', routes.index);
+app.get('/download/:user/:path(*)', routes.downloadFile);
+
 app.post('/upload', routes.upload);
 app.post('/click', routes.click);
 app.post('/authenticate', routes.authenticate);

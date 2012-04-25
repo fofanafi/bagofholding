@@ -1,5 +1,6 @@
 var fs = require("fs");
 var pg = require('pg').native; 
+var path = require('path');
 var program = require('commander');
 var client; 
 var rails_env; // Will be set to "development" or "production" on start
@@ -10,6 +11,7 @@ var users = {};
 var dbFile = 'userdb.json';
 var uid = '';
 
+var cwd = process.cwd();
 
 
 function addUser(name, password) {
@@ -78,23 +80,65 @@ function bootstrapDB() {
   });
 };
 
-
 // Decides what action to take when a user clicks a file/folder
 exports.click = loginRequired(function(req, res) {
-  // if (file is a folder)
-    var filesAsHTML = ls(req.session.currentdir + req.body.path)
-    res.send({ files: filesAsHTML });
-  // else
-  //   var file = downloadFile(req.session.currentdir + req.body.path);
-  //   res.sent({ files: file });
+fs.stat(req.session.currentdir + req.body.path, function(err, stats){ 
+    if(err){
+      console.error('Something when wrong when trying to read the file ' + path + '\n' + err);
+      res.send('');
+      }
+    else if(stats.isDirectory()){
+      var filesAsHTML = ls(path.join(req.session.currentdir, req.body.path));
+      res.send({ files: filesAsHTML });
+      }
+    else if(stats.isFile()){ 
+	res.send({ url : path.join('download',req.session.username, req.body.path)});
+      }
+    });
 });
 
+/*
+ * This method based on the response by loganfsmyth to this Stack Overflow question: 
+ * http://stackoverflow.com/questions/7288814/download-file-from-nodejs-server
+ * 
+ *     user supplied paths taken from here: 
+ * http://docs.nodejitsu.com/articles/file-system/security/introduction
+ * 
+ */
+exports.downloadFile = loginRequired(function(req, res) {
+    if(req.params.user !== req.session.username){
+      res.send('<p>Forbidden</p>', 403);
+    } else {
+	root = path.join(cwd, 'users', req.params.user);
+	if(path.join(cwd, 'users', req.params.user, req.params.path).indexOf(root) !== 0){
+	    res.send('<p>Forbidden</p>', 403);
+	}
+	else { 
+	    //make sure this is actually correct. Refactor after testing.
+	    fs.stat(path.join(cwd, 'users', req.params.user, req.params.path), function(err, stats) { 
+      if(err){
+          res.send('<p>An error occured ' + err + '</p>', 500);
+      } else if (stats.isFile()) { 
+          var filestream, 
+          filename = path.join(cwd, 'users', req.params.user, req.params.path);
+          
+          res.setHeader('Content-disposition', 'attachment; filename=' + path.basename(filename));
+          res.setHeader('Content-type', getMimeType(path));
+          
+          filestream = fs.createReadStream(filename);
+          filestream.on('data', function(chunk) {
+                res.write(chunk);
+            });
 
-// Streams a file to the user
-function downloadFile(req, res, filename) {
-  //file to download = req.session.currentdir + filename
-  //todo: implement
-};
+          filestream.on('end', function() { 
+                res.end();
+                });
+          }
+      });
+  }
+    }
+});
+
 
 
 // Returns the classes of a file, such as clickable
@@ -222,11 +266,11 @@ exports.loadDB_postgres = function() {
 
      var query = client.query("SELECT name, password FROM users");
       query.on('row', function(row) {
-        users[row.name] = { password : row.password}
+        users[row.name] = { password : row.password};
       });
     });
   });
-}
+};
 
 
 function loginRequired(routeFunction) {
@@ -273,7 +317,6 @@ exports.newUser = function(req, res) {
 exports.setEnv = function(env) {
   rails_env = env;
 };
-
 
 function storeUserData_JSON(cb) {
   fs.writeFile(dbFile, JSON.stringify(users), function(err) {

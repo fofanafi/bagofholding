@@ -10,7 +10,7 @@ $(function() {
     error: function(err, file) {
       switch(err) {
           case 'BrowserNotSupported':
-              alert('browser does not support html5 drag and drop')
+              alert('browser does not support html5 drag and drop');
               break;
           case 'TooManyFiles':
               // user uploaded more than 'maxfiles'
@@ -47,6 +47,14 @@ function clicked(filename) {
       $('.clickable').bind('click', function() {
         clicked(this.id);
       });
+    } 
+    else if(data && data.url){	       
+      var iframe = document.createElement("iframe");
+      console.error('wow');
+      iframe.src = data.url;
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
     }
+    
   });
 };
