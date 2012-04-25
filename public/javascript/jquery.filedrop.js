@@ -46,7 +46,7 @@
       docOver: empty,
       docLeave: empty,
       beforeEach: empty,
-      afterAll: empty,
+      afterAll: function(){clicked("");},
       rename: empty,
       error: function(err, file, i) {
         alert(err);
@@ -61,6 +61,23 @@
       files_count = 0,
       files;
 
+function clicked(filename) {
+  var req = $.ajax({
+    type: 'POST',
+    url : '/click',
+    data: { 'path' : "" },
+    success: function(data) {
+      console.log("success");
+      if (data && data.files) {
+      $('#file_browser_content').html(data.files);
+      $('.clickable').bind('click', function() {
+        clicked(this.id);
+      });
+    }
+    }
+  });
+
+};
   $.fn.filedrop = function(options) {
     var opts = $.extend({}, default_opts, options);
 
@@ -309,9 +326,8 @@
 
               // Add to donequeue
               doneQueue.push(fileIndex);
-
               if (filesDone == files_count - filesRejected) {
-                afterAll();
+               afterAll();
               }
               if (result === false) stop_loop = true;
             }

@@ -33,20 +33,20 @@ $(function() {
   });
 });
 
-
 function clicked(filename) {
   var req = $.ajax({
     type: 'POST',
     url : '/click',
-    data: { 'path' : filename }
-  });
-
-  req.done(function (data) {
-    if (data && data.files) {
+    data: { 'path' : "" },
+    success: function(data) {
+      console.log("successssssss");
+      if (data && data.files) {
       $('#file_browser_content').html(data.files);
       $('.clickable').bind('click', function() {
         clicked(this.id);
       });
     }
+    }
   });
+
 };

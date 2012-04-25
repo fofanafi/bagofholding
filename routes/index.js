@@ -9,7 +9,7 @@ var shell = require('shelljs');
 var users = {};
 var dbFile = 'userdb.json';
 var uid = '';
-
+var $ = require('jQuery');
 
 
 function addUser(name, password) {
@@ -81,10 +81,10 @@ function bootstrapDB() {
 
 // Decides what action to take when a user clicks a file/folder
 exports.click = loginRequired(function(req, res) {
-  var mime = getMimeType(req.body.path);
-
+  console.log("inside click");
   // if (mime == folder)
     var filesAsHTML = ls(req.session.currentdir + req.body.path)
+    console.log("filesAsHTML: " + filesAsHTML);
     res.send({ files: filesAsHTML });
   // else
   //   var file = downloadFile(req.session.currentdir + req.body.path);
@@ -300,8 +300,9 @@ exports.upload = loginRequired(function(req, res) {
       console.log("Moved file, " + file.name + ", to " + movePath);
 
     }
-  });
-  res.send(); // Send an empty response so the connection can be closed
+  }); 
+  var filesAsHTML = ls(req.session.currentdir)
+    res.send({ files: filesAsHTML });
 });
 
 
