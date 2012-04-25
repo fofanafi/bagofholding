@@ -33,28 +33,27 @@ $(function() {
   });
 });
 
-
 function clicked(filename) {
   var req = $.ajax({
     type: 'POST',
     url : '/click',
     data: { 'path' : filename }
-  });
+   });
 
-  req.done(function (data) {
-    if (data && data.files) {
-      $('#file_browser_content').html(data.files);
-      $('.clickable').bind('click', function() {
-        clicked(this.id);
-      });
-    } 
-    else if(data && data.url){	       
-      var iframe = document.createElement("iframe");
-      console.error('wow');
-      iframe.src = data.url;
-      iframe.style.display = 'none';
-      document.body.appendChild(iframe);
-    }
-    
-  });
+  req.done(function(data) {
+   console.log("successssssss");
+   if (data && data.files) {
+       $('#file_browser_content').html(data.files);
+       $('.clickable').bind('click', function() {
+              clicked(this.id);
+          });
+   } 
+   else if(data && data.url){         
+       var iframe = document.createElement("iframe");
+       console.error('wow');
+       iframe.src = data.url;
+       iframe.style.display = 'none';
+       document.body.appendChild(iframe);
+   }
+     });
 };
