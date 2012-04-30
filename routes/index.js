@@ -89,11 +89,15 @@ exports.click = loginRequired(function(req, res) {
       res.send('');
     }
     else if(stats.isDirectory()) {
-      var filesAsHTML = ls(path.join(req.session.currentdir, req.body.path));
+      console.log('clicked a dir');
+      var filesAsHTML = ls(req.session.currentdir + req.body.path + '/');
+      console.log('req.session.currentdir: ' + req.session.currentdir);
+      console.log('req.body.path: ' + req.body.path);
       res.send({ files: filesAsHTML,
                  currentdir: req.session.currentdir });
     }
     else if(stats.isFile()) { 
+      console.log('clicked a file');
       res.send({ url : path.join('download',req.session.username, req.body.path)});
     }
   });
@@ -150,6 +154,7 @@ function getClasses(filepath) {
 
 
 exports.getCurrentDirectory = function(req, res) {
+  console.log('inside getCurrentDirectory, returning: ' + req.session.currentdir)
   res.send({ path: req.session.currentdir });
 };
 
@@ -160,7 +165,7 @@ function getImage(filepath) {
   var mime = getMimeType(filepath);
 
 
-  //console.log(mime);
+  console.log('inside getImage, var mime: ' + mime);
   var imgpath = "";
   if (mime.substring(2,mime.indexOf('\n')) == "application/x-directory"){
     imgpath = "images/folder.png";
@@ -196,9 +201,11 @@ else if (mime.substring(2) != "application/x-directory"){
 
 // Returns a file's mime type
 function getMimeType(filepath) {
+  console.log('filepath being passed to getMimeType: ' + filepath);
   var mimetype;
   mimetype = (shell.exec("file --mime-type '" + filepath + "'", {silent:true}).output);
   mimetype = mimetype.substring(mimetype.indexOf(": "), mimetype.length);
+  console.log('inside getMimeType, var mimetype: ' + mimetype);
   return mimetype;
 
     
